@@ -35,7 +35,7 @@ You need:
 - a 0.96″ OLED display
 - optionally a WS2812 LED, a push button, a buzzer and a humidity sensor (SHT31/SHT40/AHT20/HTU21D)
 
-With only the humidity sensor it becomes the **PrintDock Sensor**, a wireless humidity meter for a dry box, AMS or ACE without its own measurement. It uses the same firmware and shows up in PrintDock under *Settings → Humidity & drying*.
+With only the humidity sensor it becomes the **PrintDock Sensor**, a wireless humidity meter for a dry box, AMS or ACE without its own measurement. It uses the same firmware and shows up in PrintDock under *Settings → Printers & filament → Humidity & drying*.
 
 Parts cost roughly €20–30. Wiring and parts list: [docs/wiring.md](docs/wiring.md).
 
@@ -55,7 +55,7 @@ pio run -e d1_mini32 -t upload
 ## Setup
 
 1. Start the station and join the Wi-Fi network **PrintDock-Station**. Enter your home Wi-Fi and the PrintDock address, e.g. `192.168.1.20:3080`.
-2. In PrintDock, confirm the code shown on the display under *Settings → Filament → PrintDock Station*.
+2. In PrintDock, confirm the code shown on the display under *Settings → PrintDock Station*.
 3. Tare the scale with nothing on it, then calibrate it with a known weight.
 
 The protocol is described in [docs/protocol.md](docs/protocol.md). To try it without hardware, run `scripts/station-sim.js` from PrintDock. This needs PrintDock **0.9.0** or newer.

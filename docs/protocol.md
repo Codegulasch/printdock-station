@@ -11,7 +11,7 @@ The default port is 3080. As a Home Assistant add-on, use the add-on's direct po
 ## Pairing
 
 1. The station connects and sends `hello`. A paired station includes its `token`.
-2. If the token is unknown or missing, PrintDock replies with `pair {code}`. The station shows the six-digit code, and the same code appears in PrintDock under *Settings → Filament → PrintDock Station*.
+2. If the token is unknown or missing, PrintDock replies with `pair {code}`. The station shows the six-digit code, and the same code appears in PrintDock under *Settings → PrintDock Station*.
 3. When the user clicks *Pair*, PrintDock sends `welcome {id, name, token}`. The station stores the token in flash.
 4. When a station is removed in PrintDock, it gets `forget` and drops its token.
 
