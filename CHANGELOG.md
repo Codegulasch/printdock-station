@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.0
+
+- Feuchtesensor (optional) am I²C-Bus: SHT4x, SHT3x, AHT10/AHT20, HTU21D/SHT21/Si7021 werden erkannt. Die Station meldet Feuchte und Temperatur alle 30 s an PrintDock (`env`) und zeigt sie an. Ohne NFC-Leser und Waage arbeitet sie als reiner Feuchtemesser, z. B. in der Trockenbox.
+
 ## 0.1.0
 
 - Erste Version: PN532 (SPI) liest NTAG21x/MIFARE Ultralight inkl. Seiten und erkennt MIFARE Classic an der UID, schreibt Seiten im Auftrag von PrintDock und prüft sie nach dem Schreiben.

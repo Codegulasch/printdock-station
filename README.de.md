@@ -29,7 +29,7 @@ Die Station selbst ist bewusst „dumm“: Sie liest und schreibt rohe Tag-Seite
 
 ## Hardware
 
-ESP32 (WROOM-DevKit oder D1 Mini ESP32), PN532, HX711 mit 5-kg-Wägezelle, 0,96″-OLED, optional WS2812-LED, Taster und Summer. Materialkosten etwa 20–30 €. Verdrahtung und Stückliste: **[docs/wiring.md](docs/wiring.md)**.
+ESP32 (WROOM-DevKit oder D1 Mini ESP32), PN532, HX711 mit 5-kg-Wägezelle, 0,96″-OLED, optional WS2812-LED, Taster, Summer und ein Feuchtesensor (SHT31/SHT40/AHT20/HTU21D). Nur mit Feuchtesensor ist sie ein Funk-Feuchtemesser für Trockenbox, AMS oder ACE ohne eigene Messung. Materialkosten etwa 20–30 €. Verdrahtung und Stückliste: **[docs/wiring.md](docs/wiring.md)**.
 
 ## Firmware
 
@@ -50,7 +50,7 @@ Die Factory-Images landen in `.pio/build/<env>/printdock-station-<env>.factory.b
 ## Einrichten
 
 1. Station starten → WLAN **PrintDock-Station** → Heim-WLAN und PrintDock-Adresse (z. B. `192.168.1.20:3080`) eintragen.
-2. Code vom Display in PrintDock unter *Einstellungen → Filament → Stationen* bestätigen.
+2. Code vom Display in PrintDock unter *Einstellungen → Filament → PrintDock Station* bestätigen.
 3. *Tara* mit leerer Waage, dann mit bekanntem Gewicht *Kalibrieren*.
 4. Optional bei der Station einstellen, dass sie **an einem Drucker** steht – mit festem Fach legt PrintDock gescannte Spulen sofort dort hinein.
 

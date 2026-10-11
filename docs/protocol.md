@@ -11,7 +11,7 @@ The default port is 3080. As a Home Assistant add-on, use the add-on's direct po
 ## Pairing
 
 1. The station connects and sends `hello`. A paired station includes its `token`.
-2. If the token is unknown or missing, PrintDock replies with `pair {code}`. The station shows the six-digit code, and the same code appears in PrintDock under *Settings → Filament → Stations*.
+2. If the token is unknown or missing, PrintDock replies with `pair {code}`. The station shows the six-digit code, and the same code appears in PrintDock under *Settings → Filament → PrintDock Station*.
 3. When the user clicks *Pair*, PrintDock sends `welcome {id, name, token}`. The station stores the token in flash.
 4. When a station is removed in PrintDock, it gets `forget` and drops its token.
 
@@ -19,13 +19,14 @@ The default port is 3080. As a Home Assistant add-on, use the add-on's direct po
 
 | `t` | Fields | When |
 |---|---|---|
-| `hello` | `id` (efuse MAC, hex), `name`, `fw`, `hw`, `caps {nfc, scale, display, led}`, `token?` | after connecting |
+| `hello` | `id` (efuse MAC, hex), `name`, `fw`, `hw`, `caps {nfc, scale, display, led, humidity}`, `token?` | after connecting |
 | `tag` | `uid` (hex), `kind` (`ntag` \| `mifare_classic`), `pages?` (hex, from page 0) | tag placed (once per tag) |
 | `tag_gone` | – | tag removed |
 | `weight` | `g` (number), `stable` (bool) | on change (at most every 300 ms) and every 5 s |
 | `button` | `press` (`short` \| `long`) | button; long press also tares locally |
 | `written` | `job`, `ok`, `uid`, `error?`, `pages?` (read back after writing) | after a `write` |
 | `calibrated` | `ok`, `grams` | after `calibrate` |
+| `env` | `h` (% RH), `temp?` (°C), `sensor` | every 30 s if a humidity sensor is fitted (`caps.humidity`) |
 | `log` | `msg` | optional diagnostics |
 
 `pages` covers pages 0–3 (UID, lock bits, Capability Container) and as much user memory as needed. That means up to the end of the NDEF TLV, or pages 4–31 for an Anycubic ACE block.
