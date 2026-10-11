@@ -29,7 +29,7 @@ The station is deliberately thin: it reads and writes raw tag pages, weighs and 
 ## Hardware
 
 You need:
-- an ESP32 (WROOM devkit or D1 Mini ESP32)
+- an ESP32 (WROOM devkit or D1 Mini ESP32) or a D1 Mini with ESP8266 (PN532 then in I²C mode)
 - a PN532 NFC reader
 - an HX711 with a 5 kg load cell
 - a 0.96″ OLED display
@@ -48,8 +48,8 @@ Parts cost roughly €20–30. Wiring and parts list: [docs/wiring.md](docs/wiri
 **Build it yourself** with PlatformIO:
 
 ```sh
-pio run                      # both boards
-pio run -e d1_mini32 -t upload
+pio run                      # all boards
+pio run -e d1_mini32 -t upload   # or -e d1_mini for the ESP8266
 ```
 
 ## Setup

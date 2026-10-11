@@ -29,7 +29,7 @@ Die Station selbst ist bewusst „dumm“: Sie liest und schreibt rohe Tag-Seite
 
 ## Hardware
 
-ESP32 (WROOM-DevKit oder D1 Mini ESP32), PN532, HX711 mit 5-kg-Wägezelle, 0,96″-OLED, optional WS2812-LED, Taster, Summer und ein Feuchtesensor (SHT31/SHT40/AHT20/HTU21D). Nur mit Feuchtesensor wird daraus der **PrintDock Sensor**, ein Funk-Feuchtemesser für Trockenbox, AMS oder ACE ohne eigene Messung – gleiche Firmware, er meldet sich in PrintDock unter *Einstellungen → Drucker & Filament → Feuchte & Trocknen*. Materialkosten etwa 20–30 €. Verdrahtung und Stückliste: **[docs/wiring.md](docs/wiring.md)**.
+ESP32 (WROOM-DevKit oder D1 Mini ESP32) oder D1 Mini mit ESP8266 (PN532 dann im I²C-Modus), PN532, HX711 mit 5-kg-Wägezelle, 0,96″-OLED, optional WS2812-LED, Taster, Summer und ein Feuchtesensor (SHT31/SHT40/AHT20/HTU21D). Nur mit Feuchtesensor wird daraus der **PrintDock Sensor**, ein Funk-Feuchtemesser für Trockenbox, AMS oder ACE ohne eigene Messung – gleiche Firmware, er meldet sich in PrintDock unter *Einstellungen → Drucker & Filament → Feuchte & Trocknen*. Materialkosten etwa 20–30 €. Verdrahtung und Stückliste: **[docs/wiring.md](docs/wiring.md)**.
 
 ## Firmware
 
@@ -40,8 +40,8 @@ ESP32 (WROOM-DevKit oder D1 Mini ESP32), PN532, HX711 mit 5-kg-Wägezelle, 0,96�
 **Selbst bauen** mit [PlatformIO](https://platformio.org):
 
 ```sh
-pio run                      # beide Boards
-pio run -e d1_mini32 -t upload
+pio run                      # alle Boards
+pio run -e d1_mini32 -t upload   # bzw. -e d1_mini für den ESP8266
 pio device monitor
 ```
 

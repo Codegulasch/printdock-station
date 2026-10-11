@@ -2,11 +2,18 @@
 // Protokoll: docs/protocol.md · Verdrahtung: docs/wiring.md
 #include <Arduino.h>
 #include <ArduinoJson.h>
+#if defined(ESP8266)
+#include <ESP8266WiFi.h>
+#include <ESP8266httpUpdate.h>
+#include <ESP8266mDNS.h>
+#define httpUpdate ESPhttpUpdate
+#else
 #include <ESPmDNS.h>
 #include <HTTPUpdate.h>
+#include <WiFi.h>
+#endif
 #include <Preferences.h>
 #include <WebSocketsClient.h>
-#include <WiFi.h>
 #include <WiFiManager.h>
 
 #include "config.h"
@@ -68,8 +75,19 @@ static void parseAddress(String a) {
 /** homeassistant.local per mDNS auflösen – der normale DNS kennt .local nicht */
 static String resolveHost(const String &h) {
   if (!h.endsWith(".local")) return h;
+#if defined(ESP8266)
+  // ESP8266: Dienstsuche liefert die IP des Rechners mit diesem Namen
+  String name = h.substring(0, h.length() - 6);
+  int n = MDNS.queryService("http", "tcp");
+  for (int i = 0; i < n; i++) {
+    if (MDNS.hostname(i).equalsIgnoreCase(name) || MDNS.hostname(i).equalsIgnoreCase(h)) return MDNS.IP(i).toString();
+  }
+  IPAddress ip;
+  return WiFi.hostByName(h.c_str(), ip) ? ip.toString() : h;
+#else
   IPAddress ip = MDNS.queryHost(h.substring(0, h.length() - 6), 2000);
   return ip == IPAddress() ? h : ip.toString();
+#endif
 }
 
 // ---------------------------------------------------------------- Meldungen an PrintDock
@@ -256,12 +274,24 @@ void setup() {
   ui::begin();
   prefs.begin("pd", false);
   char idBuf[13];
+#if defined(ESP8266)
+  uint8_t m6[6];
+  WiFi.macAddress(m6);  // ab Werk eindeutig
+  snprintf(idBuf, sizeof(idBuf), "%02X%02X%02X%02X%02X%02X", m6[0], m6[1], m6[2], m6[3], m6[4], m6[5]);
+#else
   uint64_t mac = ESP.getEfuseMac();  // ab Werk eindeutig
   snprintf(idBuf, sizeof(idBuf), "%02X%02X%02X%02X%02X%02X", uint8_t(mac), uint8_t(mac >> 8), uint8_t(mac >> 16), uint8_t(mac >> 24), uint8_t(mac >> 32), uint8_t(mac >> 40));
+#endif
   deviceId = idBuf;
 
   // Taste beim Einschalten 5 s halten → WLAN und Adresse neu einrichten, Kopplung vergessen
   bool reset = false;
+#if defined(ESP8266)
+  // D3/GPIO0 darf beim Einschalten nicht gedrückt sein (sonst Flash-Modus) – darum hier 3 s Zeit zum Drücken
+  showLines({"PrintDock Station", "Zurücksetzen:", "jetzt Taste halten"});
+  ui::loop();
+  for (uint32_t w = millis(); millis() - w < 3000 && digitalRead(PIN_BUTTON) == HIGH;) delay(20);
+#endif
   if (digitalRead(PIN_BUTTON) == LOW) {
     showLines({"Taste halten …", "zum Zurücksetzen"});
     ui::loop();
@@ -277,14 +307,22 @@ void setup() {
   env::begin();
   if (!nfc::begin()) {
     if (env::ok()) showLines({"Feuchtesensor", env::sensor(), "(ohne NFC-Leser)"});
+#if defined(PN532_I2C)
+    else showLines({"NFC-Leser", "nicht gefunden", "I2C-Modus prüfen"});
+#else
     else showLines({"NFC-Leser", "nicht gefunden", "SPI-Modus prüfen"});
+#endif
   }
   scale::begin();
   ui::loop();
   delay(nfc::ok() ? 300 : 1500);
 
   setupWifi(reset || prefs.getString("address", "").isEmpty());
+#if defined(ESP8266)
+  WiFi.setSleepMode(WIFI_NONE_SLEEP);
+#else
   WiFi.setSleep(false);
+#endif
   MDNS.begin(("printdock-station-" + deviceId.substring(6)).c_str());
   parseAddress(prefs.getString("address", ""));
   token = prefs.getString("token", "");
@@ -320,6 +358,9 @@ static void handleButton() {
 }
 
 void loop() {
+#if defined(ESP8266)
+  MDNS.update();
+#endif
   ws.loop();
   handleButton();
 
