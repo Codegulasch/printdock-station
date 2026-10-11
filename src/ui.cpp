@@ -16,7 +16,10 @@ static bool envOn = false;
 static uint32_t color = 0, blinkUntil = 0, lastDraw = 0;
 
 static void buzz(uint16_t hz, uint16_t ms) {
-#ifdef PIN_BUZZER
+#if defined(PIN_BUZZER) && defined(ESP8266)
+  tone(PIN_BUZZER, hz, ms);
+  delay(ms);
+#elif defined(PIN_BUZZER)
   ledcAttachPin(PIN_BUZZER, 7);
   ledcWriteTone(7, hz);
   delay(ms);

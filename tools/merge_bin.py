@@ -7,6 +7,12 @@ import os
 def merge(source, target, env):
     build = env.subst("$BUILD_DIR")
     out = os.path.join(build, "printdock-station-%s.factory.bin" % env.subst("$PIOENV"))
+    if env.BoardConfig().get("build.mcu", "") == "esp8266":
+        # ESP8266: das Image enthält den Bootloader schon – nur kopieren
+        import shutil
+        shutil.copyfile(os.path.join(build, "firmware.bin"), out)
+        print("Factory-Image: %s" % out)
+        return
     esptool = os.path.join(env.PioPlatform().get_package_dir("tool-esptoolpy"), "esptool.py")
     board = env.BoardConfig()
     args = [

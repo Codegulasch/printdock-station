@@ -1,5 +1,5 @@
 // Pinbelegung und Grundeinstellungen.
-// Gleiche GPIOs auf ESP32-WROOM DevKit und D1 Mini ESP32 – siehe docs/wiring.md.
+// Gleiche GPIOs auf ESP32-WROOM DevKit und D1 Mini ESP32; D1 Mini ESP8266 eigene Belegung – siehe docs/wiring.md.
 #pragma once
 
 #ifndef FW_VERSION
@@ -10,11 +10,26 @@
 #define BOARD_NAME "D1 Mini ESP32"
 #elif defined(ARDUINO_ESP32_DEV)
 #define BOARD_NAME "ESP32-WROOM DevKit"
+#elif defined(ESP8266)
+#define BOARD_NAME "D1 Mini ESP8266"
 #else
 #define BOARD_NAME "ESP32"
 #endif
 #endif
 
+#if defined(ESP8266)
+// ---- Wemos/LOLIN D1 Mini (ESP8266): wenige freie Pins, darum PN532 über I²C (am Modul: I²C-Modus)
+// Ein Bus für PN532, OLED und Feuchtesensor: D2 = SDA, D1 = SCL
+#define PN532_I2C 1
+#define PIN_I2C_SDA 4    // D2
+#define PIN_I2C_SCL 5    // D1
+#define PIN_HX711_DOUT 14  // D5
+#define PIN_HX711_SCK 12   // D6
+#define PIN_LED 13         // D7
+#define LED_COUNT 1
+#define PIN_BUTTON 0       // D3 (Flash-Taste am Board; beim Einschalten NICHT halten – siehe docs/wiring.md)
+#define PIN_BUZZER 15      // D8 (optional)
+#else
 // PN532 über SPI (am Modul: SPI-Modus einstellen)
 #define PIN_PN532_SCK 18
 #define PIN_PN532_MISO 19
@@ -38,6 +53,7 @@
 
 // Passiver Summer (optional)
 #define PIN_BUZZER 25
+#endif
 
 // Allgemein
 #define AP_NAME "PrintDock-Station"

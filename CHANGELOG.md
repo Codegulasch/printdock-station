@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0
+
+- Neues Board: **D1 Mini mit ESP8266**. PN532, OLED und Feuchtesensor teilen sich dort den I²C-Bus (PN532 im I²C-Modus), Belegung in docs/wiring.md. Zurücksetzen per Taste an D3 nach dem Einschalten (D3 ist der Flash-Pin).
+
 ## 0.2.0
 
 - Feuchtesensor (optional) am I²C-Bus: SHT4x, SHT3x, AHT10/AHT20, HTU21D/SHT21/Si7021 werden erkannt. Die Station meldet Feuchte und Temperatur alle 30 s an PrintDock (`env`) und zeigt sie an. Ohne NFC-Leser und Waage arbeitet sie als reiner Feuchtemesser, z. B. in der Trockenbox.

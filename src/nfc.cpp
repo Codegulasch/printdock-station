@@ -2,10 +2,15 @@
 
 #include <Adafruit_PN532.h>
 #include <SPI.h>
+#include <Wire.h>
 
 #include "config.h"
 
+#if defined(PN532_I2C)
+static Adafruit_PN532 pn532(255, 255, &Wire);  // I²C ohne IRQ- und Reset-Leitung
+#else
 static Adafruit_PN532 pn532(PIN_PN532_SS, &SPI);  // Hardware-SPI (VSPI)
+#endif
 static bool ready = false;
 static uint32_t fwVersion = 0;
 static uint8_t misses = 0;
@@ -32,7 +37,11 @@ static int hexVal(char c) {
 namespace nfc {
 
 bool begin() {
+#if defined(PN532_I2C)
+  Wire.setClockStretchLimit(150000);  // PN532 hält den Takt beim Antworten an
+#else
   SPI.begin(PIN_PN532_SCK, PIN_PN532_MISO, PIN_PN532_MOSI, PIN_PN532_SS);
+#endif
   pn532.begin();
   fwVersion = pn532.getFirmwareVersion();
   if (!fwVersion) {
