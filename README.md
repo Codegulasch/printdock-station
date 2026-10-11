@@ -37,7 +37,7 @@ You need:
 
 With only the humidity sensor it becomes the **PrintDock Sensor**, a wireless humidity meter for a dry box, AMS or ACE without its own measurement. It uses the same firmware and shows up in PrintDock under *Settings → Printers & filament → Humidity & drying*.
 
-Parts cost roughly €20–30. Wiring and parts list: [docs/wiring.md](docs/wiring.md).
+Parts cost roughly €20–30. A printable case (no supports, only 4 screws) is in [case/](case/README.md). Wiring and parts list: [docs/wiring.md](docs/wiring.md).
 
 ## Firmware
 

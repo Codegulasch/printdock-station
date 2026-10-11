@@ -2,6 +2,7 @@
 
 ## 0.3.0
 
+- Gehäuse zum Drucken (`case/`): Unterteil, Deckel mit PN532-Schienen, Teller – für D1 Mini und ESP32, ohne Stützen, nur die 4 Schrauben der Wägezelle.
 - Doku: WLAN-Einrichtung Schritt für Schritt (http://192.168.4.1, *Configure WiFi*, Fehlerhilfe).
 - Neues Board: **D1 Mini mit ESP8266**. PN532, OLED und Feuchtesensor teilen sich dort den I²C-Bus (PN532 im I²C-Modus), Belegung in docs/wiring.md. Zurücksetzen per Taste an D3 nach dem Einschalten (D3 ist der Flash-Pin).
 
