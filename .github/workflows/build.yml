@@ -25,13 +25,13 @@ jobs:
         run: pip install platformio
       - name: Bauen
         run: |
-          VERSION=${GITHUB_REF_NAME#v}
-          case "$GITHUB_REF" in refs/tags/v*) export PLATFORMIO_BUILD_FLAGS="-DFW_VERSION=\\\"$VERSION\\\"";; esac
+          case "$GITHUB_REF" in refs/tags/v*) export FW_VERSION=${GITHUB_REF_NAME#v};; esac
           pio run
       - name: Dateien sammeln
         run: |
           mkdir -p dist
-          VERSION=${GITHUB_REF_NAME#v}
+          VERSION=$(grep -m1 -oE '^## [0-9]+\.[0-9]+\.[0-9]+' CHANGELOG.md | cut -c4-)
+          case "$GITHUB_REF" in refs/tags/v*) VERSION=${GITHUB_REF_NAME#v};; esac
           for env in esp32dev d1_mini32; do
             cp .pio/build/$env/printdock-station-$env.factory.bin dist/printdock-station-$env-$VERSION.factory.bin
             cp .pio/build/$env/firmware.bin dist/printdock-station-$env-$VERSION.ota.bin
