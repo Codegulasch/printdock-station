@@ -61,9 +61,9 @@ Findet die Station den Leser nicht, zeigt das Display „NFC-Leser nicht gefunde
 
 Zeigt die Waage negative Werte, A+ und A− tauschen. Die Wägezelle braucht eine feste Unterlage auf der einen Seite und den Teller auf der anderen. Eine Spule (Ø 200 mm) liegt auf einem Teller von etwa 120–150 mm sicher auf.
 
-### Nur als Feuchtemesser
+### Nur als Feuchtemesser (PrintDock Sensor)
 
-Ohne PN532 und HX711 – nur ESP32, Feuchtesensor und optional das OLED – wird die Station zum Funk-Feuchtemesser, etwa für eine Trockenbox ohne eigene Anzeige oder ein AMS/ACE ohne Messung. In PrintDock unter *Einstellungen → Filament → Luftfeuchte* der Messstelle zuordnen. Der Sensor sollte in der Box sitzen; das ESP32 kann außen bleiben (vier Adern, bis etwa 1 m).
+Ohne PN532 und HX711 – nur ESP32, Feuchtesensor und optional das OLED – wird die Station zum **PrintDock Sensor**, einem Funk-Feuchtemesser, etwa für eine Trockenbox ohne eigene Anzeige oder ein AMS/ACE ohne Messung. In PrintDock erscheint er unter *Einstellungen → Feuchte & Trocknen* zum Koppeln und wird dort einer Messstelle zugeordnet. Der Sensor sollte in der Box sitzen; das ESP32 kann außen bleiben (vier Adern, bis etwa 1 m).
 
 ## Erster Start
 
