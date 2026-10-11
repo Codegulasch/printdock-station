@@ -54,7 +54,7 @@ pio run -e d1_mini32 -t upload   # or -e d1_mini for the ESP8266
 
 ## Setup
 
-1. Start the station and join the Wi-Fi network **PrintDock-Station**. Enter your home Wi-Fi and the PrintDock address, e.g. `192.168.1.20:3080`.
+1. **Wi-Fi:** start the station and join the Wi-Fi network **PrintDock-Station** with a phone or laptop (no password). The setup page usually opens by itself; otherwise open **http://192.168.4.1** in the browser (on a phone, turn mobile data off briefly). Tap *Configure WiFi*, choose your home Wi-Fi (2.4 GHz only), enter its password, put the PrintDock address, e.g. `192.168.1.20:3080`, into *PrintDock-Adresse* and tap *Save*. Step by step with troubleshooting (German): [docs/wiring.md](docs/wiring.md#wlan-einrichten-schritt-für-schritt).
 2. In PrintDock, confirm the code shown on the display under *Settings → PrintDock Station*.
 3. Tare the scale with nothing on it, then calibrate it with a known weight.
 

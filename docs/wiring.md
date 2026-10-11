@@ -101,9 +101,25 @@ Ohne PN532 und HX711 – nur ESP32 bzw. D1 Mini, Feuchtesensor und optional das 
 1. Firmware flashen:
    - Im Browser über https://web.esphome.io → *Connect* → `printdock-station-<board>-<version>.factory.bin`.
    - Oder mit esptool: `esptool.py write_flash 0x0 printdock-station-esp32dev-0.1.0.factory.bin`.
-2. Die Station öffnet das WLAN **PrintDock-Station**. Damit verbinden: das Einrichtungsfenster öffnet sich, sonst http://192.168.4.1 aufrufen.
-3. Heim-WLAN wählen und die **PrintDock-Adresse** eintragen, z. B. `192.168.1.20:3080`. Beim Home-Assistant-Add-on ist das die IP von Home Assistant mit Port 3080. PrintDock zeigt die passende Adresse unter *Einstellungen → PrintDock Station → Station einrichten*.
-4. Das Display zeigt einen sechsstelligen Code. In PrintDock unter *Einstellungen → PrintDock Station* denselben Code bestätigen.
-5. Waage kalibrieren: leer *Tara*, dann ein bekanntes Gewicht auflegen und *Kalibrieren*.
+2. WLAN einrichten: mit dem WLAN **PrintDock-Station** verbinden, **http://192.168.4.1** öffnen, *Configure WiFi* → Heim-WLAN, Passwort und PrintDock-Adresse → *Save*. Ausführlich: [WLAN einrichten](#wlan-einrichten-schritt-für-schritt).
+3. Das Display zeigt einen sechsstelligen Code. In PrintDock unter *Einstellungen → PrintDock Station* denselben Code bestätigen.
+4. Waage kalibrieren: leer *Tara*, dann ein bekanntes Gewicht auflegen und *Kalibrieren*.
 
-**Zurücksetzen:** Taster beim Einschalten 5 Sekunden halten. Das löscht WLAN, Adresse und Kopplung.
+**Zurücksetzen:** Taster beim Einschalten 5 Sekunden halten (D1 Mini ESP8266: erst einschalten, dann halten, sobald „Zurücksetzen: jetzt Taste halten“ erscheint). Das löscht WLAN, Adresse und Kopplung – danach öffnet die Station wieder das WLAN „PrintDock-Station“.
+
+### WLAN einrichten (Schritt für Schritt)
+
+Beim ersten Start – oder wenn die Station ihr Heim-WLAN nicht findet – öffnet sie ein eigenes WLAN. Das Display zeigt dann *Einrichten · WLAN verbinden: PrintDock-Station · 192.168.4.1*.
+
+1. Mit Handy oder Laptop das WLAN **PrintDock-Station** wählen (offen, kein Passwort).
+2. Meist öffnet sich die Einrichtungsseite von selbst („Im Netzwerk anmelden“). Falls nicht: im Browser **http://192.168.4.1** aufrufen. Am Handy dafür mobile Daten kurz ausschalten, sonst sucht der Browser im Internet.
+3. Auf der Seite **„Configure WiFi“** tippen.
+4. Heim-WLAN aus der Liste wählen (nur 2,4 GHz – 5-GHz-Netze sieht die Station nicht) und das **WLAN-Passwort** eintragen.
+5. Darunter ins Feld **„PrintDock-Adresse“** die Adresse von PrintDock eintragen, z. B. `192.168.1.20:3080`. Beim Home-Assistant-Add-on ist das die IP von Home Assistant mit Port 3080. Die passende Adresse zum Kopieren steht in PrintDock unter *Einstellungen → PrintDock Station → Station einrichten*.
+6. **„Save“** tippen. Die Station verbindet sich mit dem Heim-WLAN, das Einrichtungs-WLAN verschwindet, und das Display zeigt „Verbinde …“ und danach den Kopplungscode.
+
+Klappt es nicht:
+- **Das WLAN „PrintDock-Station“ taucht wieder auf:** WLAN-Passwort falsch oder 5-GHz-Netz gewählt – Schritte wiederholen.
+- **Display zeigt „PrintDock nicht erreichbar“:** Adresse oder Port falsch. Station zurücksetzen (siehe unten) und die Adresse neu eintragen.
+- Die Einrichtungsseite schließt sich nach 5 Minuten ohne Eingabe; die Station startet dann neu und öffnet das WLAN wieder.
+

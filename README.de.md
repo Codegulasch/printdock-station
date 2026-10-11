@@ -49,7 +49,7 @@ Die Factory-Images landen in `.pio/build/<env>/printdock-station-<env>.factory.b
 
 ## Einrichten
 
-1. Station starten → WLAN **PrintDock-Station** → Heim-WLAN und PrintDock-Adresse (z. B. `192.168.1.20:3080`) eintragen.
+1. **WLAN:** Station starten und mit Handy oder Laptop das WLAN **PrintDock-Station** wählen (ohne Passwort). Die Einrichtungsseite öffnet sich meist selbst – sonst im Browser **http://192.168.4.1** aufrufen (am Handy mobile Daten kurz aus). Dort *Configure WiFi* → Heim-WLAN wählen (2,4 GHz), Passwort eingeben, ins Feld *PrintDock-Adresse* z. B. `192.168.1.20:3080` eintragen → *Save*. Schritt für Schritt mit Fehlerhilfe: [docs/wiring.md](docs/wiring.md#wlan-einrichten-schritt-für-schritt).
 2. Code vom Display in PrintDock unter *Einstellungen → PrintDock Station* bestätigen.
 3. *Tara* mit leerer Waage, dann mit bekanntem Gewicht *Kalibrieren*.
 4. Optional bei der Station einstellen, dass sie **an einem Drucker** steht – mit festem Fach legt PrintDock gescannte Spulen sofort dort hinein.
