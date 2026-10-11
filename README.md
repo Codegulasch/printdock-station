@@ -35,7 +35,7 @@ You need:
 - a 0.96″ OLED display
 - optionally a WS2812 LED, a push button, a buzzer and a humidity sensor (SHT31/SHT40/AHT20/HTU21D)
 
-With only the humidity sensor it works as a wireless humidity meter for a dry box, AMS or ACE without its own measurement.
+With only the humidity sensor it becomes the **PrintDock Sensor**, a wireless humidity meter for a dry box, AMS or ACE without its own measurement. It uses the same firmware and shows up in PrintDock under *Settings → Humidity & drying*.
 
 Parts cost roughly €20–30. Wiring and parts list: [docs/wiring.md](docs/wiring.md).
 
