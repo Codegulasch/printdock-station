@@ -10,6 +10,7 @@ void setColor(uint32_t rgb);  // 0 = aus
 void beep(const String &kind); // "ok", "warn", "error"
 void setStatus(bool wifi, bool linked);
 void setWeight(bool on, float grams, bool stable);
+void setEnv(bool on, float humidity);
 void blink();
 void loop();
 }  // namespace ui

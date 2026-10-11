@@ -10,6 +10,7 @@
 #include <WiFiManager.h>
 
 #include "config.h"
+#include "env.h"
 #include "nfc.h"
 #include "scale.h"
 #include "ui.h"
@@ -23,7 +24,8 @@ static bool linked = false;   // gekoppelt und von PrintDock begrüßt
 static bool wsUp = false;     // WebSocket offen
 static float lastSentG = -1e9;
 static bool lastSentStable = false;
-static uint32_t lastWeightSent = 0, lastNfcPoll = 0;
+static uint32_t lastWeightSent = 0, lastNfcPoll = 0, lastEnv = 0;
+static float envH = NAN, envT = NAN;
 
 // ---------------------------------------------------------------- Hilfen
 
@@ -84,6 +86,7 @@ static void sendHello() {
   caps["scale"] = scale::ok();
   caps["display"] = true;
   caps["led"] = true;
+  caps["humidity"] = env::ok();
   if (token.length()) d["token"] = token;
   send(d);
 }
@@ -114,6 +117,16 @@ static void sendWeight(bool force = false) {
   lastWeightSent = millis();
 }
 
+static void sendEnv() {
+  if (isnan(envH)) return;
+  JsonDocument d;
+  d["t"] = "env";
+  d["h"] = roundf(envH * 10) / 10;
+  if (!isnan(envT)) d["temp"] = roundf(envT * 10) / 10;
+  d["sensor"] = env::sensor();
+  send(d);
+}
+
 static void sendButton(const char *press) {
   JsonDocument d;
   d["t"] = "button";
@@ -141,6 +154,7 @@ static void onMessage(const char *payload, size_t len) {
     linked = true;
     if (tag.present) sendTag();
     sendWeight(true);
+    sendEnv();
   } else if (!strcmp(t, "forget") || !strcmp(t, "pair_rejected")) {
     token = "";
     prefs.remove("token");
@@ -260,7 +274,11 @@ void setup() {
     }
   }
 
-  if (!nfc::begin()) showLines({"NFC-Leser", "nicht gefunden", "SPI-Modus prüfen"});
+  env::begin();
+  if (!nfc::begin()) {
+    if (env::ok()) showLines({"Feuchtesensor", env::sensor(), "(ohne NFC-Leser)"});
+    else showLines({"NFC-Leser", "nicht gefunden", "SPI-Modus prüfen"});
+  }
   scale::begin();
   ui::loop();
   delay(nfc::ok() ? 300 : 1500);
@@ -323,6 +341,18 @@ void loop() {
   if (scale::update()) {
     ui::setWeight(true, scale::grams(), scale::stable());
     if (linked) sendWeight();
+  }
+
+  // Feuchtesensor: alle 30 s messen und melden
+  if (env::ok() && (millis() - lastEnv > 30000 || lastEnv == 0)) {
+    lastEnv = millis();
+    float h, t;
+    if (env::read(h, t)) {
+      envH = h;
+      envT = t;
+      ui::setEnv(true, h);
+      if (linked) sendEnv();
+    }
   }
 
   ui::setStatus(WiFi.status() == WL_CONNECTED, linked);

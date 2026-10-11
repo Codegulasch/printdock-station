@@ -11,7 +11,8 @@ static Adafruit_NeoPixel led(LED_COUNT, PIN_LED, NEO_GRB + NEO_KHZ800);
 static String text[4];
 static uint8_t count = 0;
 static bool dirty = true, wifiOk = false, linkOk = false, weightOn = false, weightStable = false;
-static float weight = 0;
+static float weight = 0, humidity = NAN;
+static bool envOn = false;
 static uint32_t color = 0, blinkUntil = 0, lastDraw = 0;
 
 static void buzz(uint16_t hz, uint16_t ms) {
@@ -75,6 +76,12 @@ void setWeight(bool on, float grams, bool stable) {
   weightStable = stable;
 }
 
+void setEnv(bool on, float h) {
+  if (on != envOn || fabsf(h - humidity) >= 0.5f) dirty = true;
+  envOn = on;
+  humidity = h;
+}
+
 void blink() {
   blinkUntil = millis() + 3000;
 }
@@ -102,6 +109,16 @@ void loop() {
     snprintf(buf, sizeof(buf), "%s%.0f g", weightStable ? "" : "~", weight);
     oled.setFont(u8g2_font_7x14B_tf);
     oled.drawUTF8(0, 64, buf);
+  }
+  char hb[12];
+  if (envOn && !isnan(humidity)) snprintf(hb, sizeof(hb), "%.0f%% rF", humidity);
+  if (envOn && !weightOn) {
+    // nur Feuchtesensor: Messwert groß
+    oled.setFont(u8g2_font_7x14B_tf);
+    oled.drawUTF8(0, 64, hb);
+  } else if (envOn) {
+    oled.setFont(u8g2_font_5x8_tf);
+    oled.drawUTF8(56, 62, hb);
   }
   oled.setFont(u8g2_font_5x8_tf);
   oled.drawUTF8(92, 62, linkOk ? "online" : wifiOk ? "WLAN" : "offline");
