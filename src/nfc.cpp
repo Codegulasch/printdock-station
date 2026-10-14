@@ -15,6 +15,11 @@ static bool ready = false;
 static uint32_t fwVersion = 0;
 static uint8_t misses = 0;
 static uint32_t lastInit = 0;
+// Überwachung: Hängt der Leser (Wackelkontakt, Störung), richtet die Station ihn selbst neu ein
+static bool everOk = false;      // seit dem Start schon einmal geantwortet
+static uint8_t fails = 0;        // Lebenszeichen in Folge ausgeblieben
+static uint32_t lastCheck = 0;   // letztes Lebenszeichen (Antwort oder gelesener Tag)
+static int8_t change = 0;        // für takeChange(): +1 wieder da, -1 weg, 2 neu gestartet
 
 static String toHex(const uint8_t *b, size_t n) {
   static const char *H = "0123456789ABCDEF";
@@ -36,7 +41,8 @@ static int hexVal(char c) {
 
 namespace nfc {
 
-bool begin() {
+// Einmal einrichten: Bus, Aufwecken, Firmware abfragen, SAM-Konfiguration
+static bool init() {
 #if defined(PN532_I2C)
   Wire.setClockStretchLimit(150000);  // PN532 hält den Takt beim Antworten an
 #else
@@ -51,7 +57,21 @@ bool begin() {
   pn532.SAMConfig();
   pn532.setPassiveActivationRetries(0x01);  // nicht blockieren, wenn kein Tag da ist
   ready = true;
+  everOk = true;
+  fails = 0;
+  lastCheck = millis();
   return true;
+}
+
+bool begin() {
+  lastInit = millis();
+  return init();
+}
+
+int8_t takeChange() {
+  int8_t c = change;
+  change = 0;
+  return c;
 }
 
 bool ok() { return ready; }
@@ -73,10 +93,14 @@ static bool read4(uint8_t page, uint8_t *out16) {
 
 bool poll(TagInfo &tag) {
   if (!ready) {
-    // Leser beim Start nicht gefunden: alle 10 s neu versuchen
-    if (millis() - lastInit > 10000) {
+    // Leser nicht da: alle 10 s neu versuchen, nach einem Ausfall alle 2 s
+    if (millis() - lastInit > (everOk ? 2000UL : 10000UL)) {
       lastInit = millis();
-      begin();
+      if (init()) change = 1;
+    }
+    if (tag.present) {
+      tag = TagInfo();
+      return true;
     }
     return false;
   }
@@ -89,9 +113,30 @@ bool poll(TagInfo &tag) {
       misses = 0;
       return true;
     }
+    // Lebenszeichen: antwortet der Leser noch? Zweimal nichts → neu einrichten
+    if (millis() - lastCheck > NFC_CHECK_MS) {
+      lastCheck = millis();
+      if (pn532.getFirmwareVersion()) {
+        fails = 0;
+      } else if (++fails >= 2) {
+        lastInit = millis();
+        if (init()) {
+          change = 2;  // hing, läuft wieder
+        } else {
+          ready = false;
+          change = -1;
+        }
+        if (tag.present) {
+          tag = TagInfo();
+          return true;
+        }
+      }
+    }
     return false;
   }
   misses = 0;
+  fails = 0;
+  lastCheck = millis();
   if (tag.present && len == tag.uidLen && memcmp(uid, tag.uid, len) == 0) return false;
   tag = TagInfo();
   tag.present = true;

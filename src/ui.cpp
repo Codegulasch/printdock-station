@@ -35,9 +35,35 @@ static void applyLed() {
   led.show();
 }
 
+// Hängt ein Teilnehmer am I²C-Bus (z. B. der PN532 nach einem Wackler mitten in einer Antwort),
+// hält er SDA auf LOW – dann bleiben auch Display und Feuchtesensor stumm. Neun Takte auf SCL
+// und ein STOP geben den Bus wieder frei.
+static void i2cRecover() {
+  pinMode(PIN_I2C_SDA, INPUT_PULLUP);
+  pinMode(PIN_I2C_SCL, INPUT_PULLUP);
+  delayMicroseconds(20);
+  if (digitalRead(PIN_I2C_SDA) == HIGH) return;
+  pinMode(PIN_I2C_SCL, OUTPUT_OPEN_DRAIN);
+  for (uint8_t i = 0; i < 9 && digitalRead(PIN_I2C_SDA) == LOW; i++) {
+    digitalWrite(PIN_I2C_SCL, LOW);
+    delayMicroseconds(10);
+    digitalWrite(PIN_I2C_SCL, HIGH);
+    delayMicroseconds(10);
+  }
+  // STOP: SDA LOW → HIGH, während SCL HIGH ist
+  pinMode(PIN_I2C_SDA, OUTPUT_OPEN_DRAIN);
+  digitalWrite(PIN_I2C_SDA, LOW);
+  delayMicroseconds(10);
+  digitalWrite(PIN_I2C_SDA, HIGH);
+  delayMicroseconds(10);
+  pinMode(PIN_I2C_SDA, INPUT_PULLUP);
+  pinMode(PIN_I2C_SCL, INPUT_PULLUP);
+}
+
 namespace ui {
 
 void begin() {
+  i2cRecover();
   Wire.begin(PIN_I2C_SDA, PIN_I2C_SCL);
   oled.begin();
   oled.enableUTF8Print();

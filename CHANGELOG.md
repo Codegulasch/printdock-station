@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.1
+
+- **NFC-Leser überwacht:** Die Station prüft alle 3 Sekunden, ob der PN532 noch antwortet. Hängt er (Wackelkontakt, Störung), richtet sie ihn selbst neu ein – vorher half nur Strom aus. Ist er ganz weg, zeigt das Display „NFC-Leser antwortet nicht – Kabel prüfen“ und es wird alle 2 Sekunden neu versucht. PrintDock bekommt den Ausfall ins Protokoll.
+- Fix: Wurde der Leser erst nach dem Start gefunden (später eingesteckt, Wackler beim Einschalten), meldete die Station das PrintDock nicht – dort stand weiter „ohne NFC-Leser“.
+- I²C-Bus wird beim Start freigegeben, falls ein Teilnehmer ihn blockiert (D1 Mini ESP8266: PN532 und Display am selben Bus).
+- Doku: Fehlersuche NFC-Leser, Hinweis zu G23 auf ESP32-Boards mit 38 Pins.
+
 ## 0.3.0
 
 - Gehäuse zum Drucken (`case/`): Unterteil, Deckel mit PN532-Schienen, Teller – für D1 Mini und ESP32, ohne Stützen, nur die 4 Schrauben der Wägezelle.

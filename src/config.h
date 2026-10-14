@@ -61,6 +61,7 @@
 #define WS_PATH "/api/station/ws"
 #define NFC_POLL_MS 150      // so oft nach einem Tag fragen
 #define NFC_GONE_MISSES 4    // so viele Fehlversuche, bis der Tag als entfernt gilt
+#define NFC_CHECK_MS 3000    // so oft prüfen, ob der Leser noch antwortet (wenn kein Tag liegt)
 #define SCALE_SAMPLE_MS 100  // Messabstand der Waage
 #define SCALE_WINDOW 8       // gleitender Mittelwert über so viele Messungen
 #define SCALE_STABLE_G 1.5f  // Schwankung, unter der das Gewicht als ruhig gilt

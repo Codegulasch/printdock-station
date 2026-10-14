@@ -15,6 +15,10 @@ struct TagInfo {
 namespace nfc {
 bool begin();
 bool ok();
+
+/** Hat sich der Zustand des Lesers geändert? Einmal abholen: 0 nein, 1 wieder da, -1 ausgefallen,
+ *  2 hing und wurde neu eingerichtet. Die Station prüft alle paar Sekunden, ob der Leser antwortet. */
+int8_t takeChange();
 String firmware();
 
 /** Einmal je Durchlauf aufrufen. Liefert true, wenn ein Tag neu aufgelegt oder entfernt wurde. */

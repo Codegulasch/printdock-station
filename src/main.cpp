@@ -357,6 +357,26 @@ static void handleButton() {
   }
 }
 
+/** Leser ausgefallen, wieder da oder neu eingerichtet: anzeigen und PrintDock Bescheid geben */
+static void handleNfcChange() {
+  int8_t c = nfc::takeChange();
+  if (!c) return;
+  if (c == -1) {
+    showLines({"NFC-Leser", "antwortet nicht", "Kabel prüfen"});
+    ui::beep("warn");
+  } else if (!linked) {
+    showLines({"NFC-Leser", c == 2 ? "neu gestartet" : "bereit"});
+  }
+  if (!linked) return;
+  JsonDocument d;
+  d["t"] = "log";
+  d["msg"] = c == -1 ? "NFC-Leser antwortet nicht – Kabel prüfen" : c == 2 ? "NFC-Leser hing und wurde neu gestartet" : "NFC-Leser wieder bereit";
+  send(d);
+  // Wieder da: Fähigkeiten neu melden – PrintDock übernimmt caps.nfc und zeigt wieder die Startanzeige.
+  // Bei Ausfall nicht, sonst überschreibt die Startanzeige den Hinweis „Kabel prüfen“.
+  if (c == 1) sendHello();
+}
+
 void loop() {
 #if defined(ESP8266)
   MDNS.update();
@@ -366,7 +386,9 @@ void loop() {
 
   if (millis() - lastNfcPoll > NFC_POLL_MS) {
     lastNfcPoll = millis();
-    if (nfc::poll(tag)) {
+    bool tagChanged = nfc::poll(tag);
+    handleNfcChange();
+    if (tagChanged) {
       if (tag.present) {
         ui::beep("ok");
         showLines({"Tag erkannt", tag.uidHex});

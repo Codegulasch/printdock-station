@@ -81,6 +81,14 @@ Firmware: `printdock-station-d1_mini-<version>.factory.bin` (ab 0.3.0).
 - **„Flash ID: 0“ / „Failed to communicate with the flash chip“**: Der Flash-Speicher antwortet nicht. Dann wird nichts geschrieben, auch wenn der Fortschritt bis 100 % läuft. Meist liegt es am USB-Kabel (nur Ladekabel), zu wenig Strom (USB-Hub) oder an angeschlossenen Modulen – alles abstecken, direkt am Rechner mit einem anderen Kabel probieren. Bleibt es bei 0, ist das Board defekt.
 - Treiber für den USB-Chip: CH340 (Vendor 0x1A86) bzw. CP2102.
 
+### NFC-Leser reagiert nicht?
+
+- **Kein Piep, kein „Tag erkannt“ beim Auflegen:** Der Leser sieht den Tag nicht. Karte direkt flach auf das Modul legen (Reichweite nur 2–4 cm).
+- **Beim Einschalten „NFC-Leser nicht gefunden“** bzw. in PrintDock *ohne NFC-Leser*: Schalter am PN532 prüfen (ESP32: SPI = 1 OFF, 2 ON; D1 Mini ESP8266: I²C = 1 ON, 2 OFF), danach die Station **ganz stromlos** machen – der PN532 liest die Schalter nur beim Einschalten. Verdrahtung prüfen, besonders MISO/MOSI nicht vertauschen.
+- **ESP32-DevKit mit 38 Pins:** MOSI gehört an **G23** (rechts, zweiter Pin von oben, direkt unter GND). Der Aufdruck sieht dort leicht wie „G33“ aus – G33 ist aber links und gehört zur Waage.
+- **Geht nur ab und zu:** fast immer ein Wackelkontakt an den Dupont-Steckern oder zu lange Kabel (über 15–20 cm). Ab Firmware 0.3.1 prüft die Station alle 3 Sekunden, ob der Leser antwortet, richtet ihn bei einem Hänger selbst neu ein und zeigt „NFC-Leser antwortet nicht – Kabel prüfen“, wenn er ganz weg ist. Im Gehäuse am besten löten.
+- **D1 Mini ESP8266: Display und NFC bleiben beide dunkel:** PN532 und Display teilen sich den I²C-Bus – ein falsch eingestellter oder hängender PN532 legt den ganzen Bus lahm. Zum Test den PN532 abziehen: Läuft dann das Display, Schalter (I²C) und SDA/SCL am PN532 prüfen (SDA an D2, SCL an D1, nicht vertauscht).
+
 ### Wägezelle an den HX711
 
 | Ader | HX711 |
