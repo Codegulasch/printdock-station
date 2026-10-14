@@ -39,6 +39,16 @@ Gleiche GPIOs für **ESP32-WROOM-32 DevKit** (30/38 Pin) und **D1 Mini ESP32** (
 | **Feuchtesensor** | SDA / SCL | 21 / 22 (parallel zum OLED) |
 | | VCC / GND | 3V3 / GND |
 
+### Plan ESP32
+
+Schaltplan (direkt verdrahtet) und Aufbau auf dem Steckbrett, beschriftet für das ESP32-DevKit mit 38 Pins. Alle vier Pläne mit Lochtabellen auf einer Seite: [wiring.html](wiring.html) (herunterladen und im Browser öffnen).
+
+![ESP32 Schaltplan](img/wiring-esp32-schaltplan.svg)
+
+![ESP32 neben dem Steckbrett](img/wiring-esp32-steckbrett.svg)
+
+Das Steckbrett ist um 90° gedreht: Spalte 1 oben, Reihen a–j von links nach rechts. Das ESP-Kabel steckt in a, das Modul-Kabel in e derselben Spalte (jede Spalte verbindet nur a–e). Kabel vom ESP32 zum Brett: Buchse–Stecker.
+
 ### PN532 auf SPI stellen
 
 Auf dem roten PN532-Modul (Elechouse V3 und Nachbauten) sitzen zwei kleine Schalter:
@@ -70,6 +80,12 @@ Der ESP8266 hat zu wenige freie Pins für SPI, darum hängen PN532, OLED und Feu
 | | 5V / GND | 5V / GND |
 | **Taster** | – | D3 ↔ GND |
 | **Summer** | + | D8 (− an GND) |
+
+![D1 Mini Schaltplan](img/wiring-d1-schaltplan.svg)
+
+![D1 Mini auf dem Steckbrett](img/wiring-d1-steckbrett.svg)
+
+PN532 und OLED teilen sich SDA und SCL – die Abzweige als Lötstelle oder mit einer kleinen Klemme verbinden. Netzteil und USB nicht gleichzeitig anstecken.
 
 **Taster an D3:** D3 ist zugleich der Flash-Pin. Beim Einstecken darf er nicht gedrückt sein, sonst startet der D1 Mini im Flash-Modus. Zum Zurücksetzen darum erst einschalten und dann, wenn „Zurücksetzen: jetzt Taste halten“ erscheint, die Taste 5 s halten.
 
