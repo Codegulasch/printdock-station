@@ -2,6 +2,8 @@
 
 Gleiche GPIOs für **ESP32-WROOM-32 DevKit** (30/38 Pin) und **D1 Mini ESP32** (Wemos/LOLIN, 2 × 20 Pins). Der klassische **D1 Mini mit ESP8266** geht auch – mit eigener Belegung und dem PN532 im I²C-Modus, siehe [unten](#d1-mini-esp8266). Alle Module laufen mit 3,3 V, nur die WS2812-LED braucht 5 V.
 
+> Gehäuse und Waagen-Aufbau (Teller, Halterung der Wägezelle) sind noch in Arbeit. Bis dahin baust du die Station auf einem Steckbrett oder einer Lochrasterplatine auf – nach den Plänen auf dieser Seite.
+
 ## Stückliste
 
 | Teil | Hinweis | ca. Preis |
@@ -85,7 +87,7 @@ Der ESP8266 hat zu wenige freie Pins für SPI, darum hängen PN532, OLED und Feu
 
 ![D1 Mini auf dem Steckbrett](img/wiring-d1-steckbrett.svg)
 
-PN532 und OLED teilen sich SDA und SCL – die Abzweige als Lötstelle oder mit einer kleinen Klemme verbinden. Netzteil und USB nicht gleichzeitig anstecken.
+PN532 und OLED teilen sich SDA und SCL – die Abzweige als Lötstelle oder mit einer kleinen Klemme verbinden. Netzteil und USB nicht gleichzeitig anstecken. Die LED (WS2812) braucht 5 V: ihr 5V-Kabel zusammen mit D1 5V an das +5V des Netzteils.
 
 **Taster an D3:** D3 ist zugleich der Flash-Pin. Beim Einstecken darf er nicht gedrückt sein, sonst startet der D1 Mini im Flash-Modus. Zum Zurücksetzen darum erst einschalten und dann, wenn „Zurücksetzen: jetzt Taste halten“ erscheint, die Taste 5 s halten.
 
@@ -102,7 +104,7 @@ Firmware: `printdock-station-d1_mini-<version>.factory.bin` (ab 0.3.0).
 - **Kein Piep, kein „Tag erkannt“ beim Auflegen:** Der Leser sieht den Tag nicht. Karte direkt flach auf das Modul legen (Reichweite nur 2–4 cm).
 - **Beim Einschalten „NFC-Leser nicht gefunden“** bzw. in PrintDock *ohne NFC-Leser*: Schalter am PN532 prüfen (ESP32: SPI = 1 OFF, 2 ON; D1 Mini ESP8266: I²C = 1 ON, 2 OFF), danach die Station **ganz stromlos** machen – der PN532 liest die Schalter nur beim Einschalten. Verdrahtung prüfen, besonders MISO/MOSI nicht vertauschen.
 - **ESP32-DevKit mit 38 Pins:** MOSI gehört an **G23** (rechts, zweiter Pin von oben, direkt unter GND). Der Aufdruck sieht dort leicht wie „G33“ aus – G33 ist aber links und gehört zur Waage.
-- **Geht nur ab und zu:** fast immer ein Wackelkontakt an den Dupont-Steckern oder zu lange Kabel (über 15–20 cm). Ab Firmware 0.3.1 prüft die Station alle 3 Sekunden, ob der Leser antwortet, richtet ihn bei einem Hänger selbst neu ein und zeigt „NFC-Leser antwortet nicht – Kabel prüfen“, wenn er ganz weg ist. Im Gehäuse am besten löten.
+- **Geht nur ab und zu:** fast immer ein Wackelkontakt an den Dupont-Steckern oder zu lange Kabel (über 15–20 cm). Ab Firmware 0.3.1 prüft die Station alle 3 Sekunden, ob der Leser antwortet, richtet ihn bei einem Hänger selbst neu ein und zeigt „NFC-Leser antwortet nicht – Kabel prüfen“, wenn er ganz weg ist. Für den Dauerbetrieb am besten auf einer Lochrasterplatine löten.
 - **D1 Mini ESP8266: Display und NFC bleiben beide dunkel:** PN532 und Display teilen sich den I²C-Bus – ein falsch eingestellter oder hängender PN532 legt den ganzen Bus lahm. Zum Test den PN532 abziehen: Läuft dann das Display, Schalter (I²C) und SDA/SCL am PN532 prüfen (SDA an D2, SCL an D1, nicht vertauscht).
 
 ### Wägezelle an den HX711
@@ -114,7 +116,7 @@ Firmware: `printdock-station-d1_mini-<version>.factory.bin` (ab 0.3.0).
 | weiß | A− |
 | grün | A+ |
 
-Zeigt die Waage negative Werte, A+ und A− tauschen. Die Wägezelle braucht eine feste Unterlage auf der einen Seite und den Teller auf der anderen. Eine Spule (Ø 200 mm) liegt auf einem Teller von etwa 120–150 mm sicher auf.
+Zeigt die Waage negative Werte, A+ und A− tauschen. Die Wägezelle braucht eine feste Unterlage auf der einen Seite und den Teller auf der anderen. Eine Spule (Ø 200 mm) liegt auf einem Teller von etwa 120–150 mm sicher auf. Ein fertiger Waagen-Aufbau (Teller, Halterung der Wägezelle) ist noch in Arbeit – bis dahin die Wägezelle provisorisch selbst befestigen.
 
 ### Nur als Feuchtemesser (PrintDock Sensor)
 
